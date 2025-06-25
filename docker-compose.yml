@@ -1,0 +1,28 @@
+version: '5' 
+services:
+  www:
+    image: php:apache
+    volumes:
+      - "./:/var/www/html"
+      - 80:80
+      - 443:443 
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html
+    command: >
+      bash -c "docker-php-ext-install mysqli && apache2-foreground"
+  db:
+    image: mysql:latest
+    environment:
+      - MYSQL_DATABASE=php_docker
+      - MYSQL_USER=php_docker
+      - MYSQL_PASSWORD=password 
+      - MYSQL_ALLOW_EMPTY_PASSWORD=1 
+    volumes:
+      - "./db:/docker-entrypoint-initdb.d" 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8001:80
+    environment:
+      - PMA_HOST=db
+      - PMA_PORT=3306

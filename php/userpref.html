@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DailyDish - User Preferences</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .preferences-container {
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .logo span {
+            color: #ff8800;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #444;
+            font-size: 1.5rem;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .form-section h3 {
+            margin-bottom: 1rem;
+            color: #555;
+            font-size: 1.2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #0077b6;
+            box-shadow: 0 0 0 2px rgba(0, 119, 182, 0.2);
+        }
+
+        .row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .col {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .radio-group, .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .radio-option, .checkbox-option {
+            flex: 1;
+            min-width: 120px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 0.8rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .radio-option:hover, .checkbox-option:hover {
+            background-color: #e9ecef;
+        }
+
+        .radio-option.selected, .checkbox-option.selected {
+            background-color: #e6f7ff;
+            border-color: #1890ff;
+            color: #1890ff;
+        }
+
+        .radio-option input, .checkbox-option input {
+            display: none;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: #ff8800;
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-top: 1rem;
+        }
+
+        .btn-submit:hover {
+            background-color: #e67a00;
+            transform: translateY(-2px);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .btn-submit:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        /* Dietary restrictions section */
+        .restrictions-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .restriction-tag {
+            background-color: #f0f0f0;
+            color: #555;
+            border-radius: 16px;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .restriction-tag.selected {
+            background-color: #e6f7ff;
+            color: #1890ff;
+        }
+
+        .restriction-tag i {
+            margin-left: 0.4rem;
+            font-size: 0.8rem;
+        }
+
+        /* Results preview section */
+        .results-preview {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.2rem;
+            margin-top: 1.5rem;
+            border: 1px solid #eee;
+            display: none;
+        }
+
+        .results-preview h4 {
+            margin-bottom: 0.8rem;
+            color: #555;
+            font-size: 1rem;
+        }
+
+        .results-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .results-label {
+            font-weight: 500;
+            color: #666;
+        }
+
+        .results-value {
+            font-weight: 600;
+            color: #1890ff;
+        }
+
+        .bmi-category {
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .category-underweight {
+            background-color: #e6f7ff;
+            color: #1890ff;
+        }
+
+        .category-normal {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .category-overweight {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .category-obese {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .debug-info {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-family: monospace;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .debug-info h4 {
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="preferences-container">
+        <div class="logo">Daily<span>Dish</span></div>
+        <h2>Set Your Preferences</h2>
+        
+        <div id="alert" class="alert"></div>
+        
+        <form id="preferencesForm">
+            <div class="form-section">
+                <h3>Personal Information</h3>
+                <div class="row">
+                    <div class="col form-group">
+                        <label for="age">Age</label>
+                        <input type="number" id="age" name="age" class="form-control" min="12" max="120" required>
+                    </div>
+                    <div class="col form-group">
+                        <label>Gender</label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="gender" value="male" required>
+                                Male
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="gender" value="female">
+                                Female
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="gender" value="other">
+                                Other
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3>Body Metrics</h3>
+                <div class="row">
+                    <div class="col form-group">
+                        <label for="height">Height (cm)</label>
+                        <input type="number" id="height" name="height" class="form-control" min="100" max="250" step="0.1" required>
+                    </div>
+                    <div class="col form-group">
+                        <label for="current_weight">Current Weight (kg)</label>
+                        <input type="number" id="current_weight" name="current_weight" class="form-control" min="30" max="300" step="0.1" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="target_weight">Target Weight (kg) (Optional)</label>
+                    <input type="number" id="target_weight" name="target_weight" class="form-control" min="30" max="300" step="0.1">
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3>Fitness Goals</h3>
+                <div class="form-group">
+                    <label>What is your primary fitness goal?</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="fitness_goal" value="weight_loss" required>
+                            Weight Loss
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="fitness_goal" value="weight_gain">
+                            Weight Gain
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="fitness_goal" value="maintenance">
+                            Maintenance
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="fitness_goal" value="muscle_gain">
+                            Muscle Gain
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Activity Level</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="activity_level" value="1" required>
+                            Sedentary
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="activity_level" value="2">
+                            Light
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="activity_level" value="3">
+                            Moderate
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="activity_level" value="4">
+                            Active
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="activity_level" value="5">
+                            Very Active
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3>Dietary Preferences</h3>
+                <div class="form-group">
+                    <label>Dietary Restrictions (Optional)</label>
+                    <div class="restrictions-container">
+                        <div class="restriction-tag" data-value="vegetarian">Vegetarian</div>
+                        <div class="restriction-tag" data-value="vegan">Vegan</div>
+                        <div class="restriction-tag" data-value="gluten_free">Gluten-Free</div>
+                        <div class="restriction-tag" data-value="dairy_free">Dairy-Free</div>
+                        <div class="restriction-tag" data-value="nut_free">Nut-Free</div>
+                        <div class="restriction-tag" data-value="halal">Halal</div>
+                        <div class="restriction-tag" data-value="kosher">Kosher</div>
+                        <div class="restriction-tag" data-value="low_carb">Low-Carb</div>
+                        <div class="restriction-tag" data-value="low_fat">Low-Fat</div>
+                        <div class="restriction-tag" data-value="keto">Keto</div>
+                    </div>
+                    <input type="hidden" id="dietary_restrictions" name="dietary_restrictions">
+                </div>
+            </div>
+
+            <!-- Results Preview Section -->
+            <div id="resultsPreview" class="results-preview">
+                <h4>Your Health Metrics (Preview)</h4>
+                <div class="results-row">
+                    <span class="results-label">BMI:</span>
+                    <span class="results-value" id="bmiValue">--</span>
+                </div>
+                <div class="results-row">
+                    <span class="results-label">Category:</span>
+                    <span class="results-value" id="bmiCategory">--</span>
+                </div>
+                <div class="results-row">
+                    <span class="results-label">Daily Calorie Needs:</span>
+                    <span class="results-value" id="calorieValue">--</span>
+                </div>
+                <div id="bmiCategoryIndicator" class="bmi-category">
+                    Enter your details to see your BMI category
+                </div>
+            </div>
+            
+            <button type="submit" class="btn-submit">Save Preferences</button>
+        </form>
+
+        <!-- Debug information -->
+        <div id="debugInfo" class="debug-info">
+            <h4>Debug Information:</h4>
+            <div id="debugContent"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle radio option selection styling
+            const radioOptions = document.querySelectorAll('.radio-option');
+            radioOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove selected class from siblings
+                    const name = this.querySelector('input').getAttribute('name');
+                    document.querySelectorAll(`.radio-option input[name="${name}"]`).forEach(input => {
+                        input.parentElement.classList.remove('selected');
+                    });
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                    // Check the radio input
+                    this.querySelector('input').checked = true;
+                    
+                    // If this is a fitness goal or activity level selection, calculate calories
+                    if (name === 'fitness_goal' || name === 'activity_level') {
+                        calculateMetrics();
+                    }
+                });
+            });
+
+            // Handle dietary restriction tags
+            const restrictionTags = document.querySelectorAll('.restriction-tag');
+            const dietaryRestrictionsInput = document.getElementById('dietary_restrictions');
+            
+            restrictionTags.forEach(tag => {
+                tag.addEventListener('click', function() {
+                    this.classList.toggle('selected');
+                    updateDietaryRestrictions();
+                });
+            });
+
+            function updateDietaryRestrictions() {
+                const selectedRestrictions = Array.from(document.querySelectorAll('.restriction-tag.selected'))
+                    .map(tag => tag.dataset.value);
+                dietaryRestrictionsInput.value = selectedRestrictions.join(',');
+            }
+
+            // BMI and Calorie calculation
+            const heightInput = document.getElementById('height');
+            const weightInput = document.getElementById('current_weight');
+            const ageInput = document.getElementById('age');
+            const genderInputs = document.querySelectorAll('input[name="gender"]');
+            const fitnessGoalInputs = document.querySelectorAll('input[name="fitness_goal"]');
+            const activityLevelInputs = document.querySelectorAll('input[name="activity_level"]');
+            
+            // Add event listeners for metric calculations
+            heightInput.addEventListener('input', calculateMetrics);
+            weightInput.addEventListener('input', calculateMetrics);
+            ageInput.addEventListener('input', calculateMetrics);
+            genderInputs.forEach(input => input.addEventListener('change', calculateMetrics));
+            
+            function calculateMetrics() {
+                const height = parseFloat(heightInput.value);
+                const weight = parseFloat(weightInput.value);
+                const age = parseInt(ageInput.value);
+                let gender = '';
+                genderInputs.forEach(input => {
+                    if (input.checked) gender = input.value;
+                });
+                
+                let fitnessGoal = '';
+                fitnessGoalInputs.forEach(input => {
+                    if (input.checked) fitnessGoal = input.value;
+                });
+                
+                let activityLevel = 3; // Default to moderate
+                activityLevelInputs.forEach(input => {
+                    if (input.checked) activityLevel = parseInt(input.value);
+                });
+                
+                // Only calculate if we have valid inputs
+                if (height > 0 && weight > 0 && age > 0 && gender) {
+                    // Calculate BMI
+                    const heightInMeters = height / 100;
+                    const bmi = weight / (heightInMeters * heightInMeters);
+                    const roundedBmi = bmi.toFixed(1);
+                    
+                    // Determine BMI category
+                    let bmiCategory = '';
+                    let categoryClass = '';
+                    
+                    if (bmi < 18.5) {
+                        bmiCategory = 'Underweight';
+                        categoryClass = 'category-underweight';
+                    } else if (bmi >= 18.5 && bmi < 25) {
+                        bmiCategory = 'Normal weight';
+                        categoryClass = 'category-normal';
+                    } else if (bmi >= 25 && bmi < 30) {
+                        bmiCategory = 'Overweight';
+                        categoryClass = 'category-overweight';
+                    } else {
+                        bmiCategory = 'Obese';
+                        categoryClass = 'category-obese';
+                    }
+                    
+                    // Calculate BMR using Mifflin-St Jeor Equation
+                    let bmr;
+                    if (gender === 'male') {
+                        bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+                    } else { // female or other
+                        bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+                    }
+                    
+                    // Apply activity level multiplier
+                    const activityMultipliers = {
+                        1: 1.2,   // Sedentary
+                        2: 1.375, // Light
+                        3: 1.55,  // Moderate
+                        4: 1.725, // Active
+                        5: 1.9    // Very active
+                    };
+                    
+                    let tdee = Math.round(bmr * activityMultipliers[activityLevel]);
+                    
+                    // Adjust based on fitness goal
+                    let dailyCalories = tdee;
+                    switch(fitnessGoal) {
+                        case 'weight_loss':
+                            dailyCalories = Math.round(tdee * 0.8); // 20% deficit
+                            break;
+                        case 'weight_gain':
+                            dailyCalories = Math.round(tdee * 1.15); // 15% surplus
+                            break;
+                        case 'muscle_gain':
+                            dailyCalories = Math.round(tdee * 1.1); // 10% surplus
+                            break;
+                        // For 'maintenance', we keep the TDEE value
+                    }
+                    
+                    // Update the UI
+                    document.getElementById('bmiValue').textContent = roundedBmi;
+                    document.getElementById('bmiCategory').textContent = bmiCategory;
+                    document.getElementById('calorieValue').textContent = dailyCalories + ' kcal';
+                    
+                    const categoryIndicator = document.getElementById('bmiCategoryIndicator');
+                    categoryIndicator.textContent = bmiCategory;
+                    categoryIndicator.className = 'bmi-category ' + categoryClass;
+                    
+                    // Show the results section
+                    document.getElementById('resultsPreview').style.display = 'block';
+                }
+            }
+
+            // Handle form submission with better error handling
+            const preferencesForm = document.getElementById('preferencesForm');
+            const alertBox = document.getElementById('alert');
+            const submitBtn = document.querySelector('.btn-submit');
+            const debugInfo = document.getElementById('debugInfo');
+            const debugContent = document.getElementById('debugContent');
+
+            function showAlert(message, type = 'danger') {
+                alertBox.textContent = message;
+                alertBox.className = `alert alert-${type}`;
+                alertBox.style.display = 'block';
+                
+                // Scroll to top to show the alert
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            function showDebugInfo(info) {
+                debugContent.innerHTML = '<pre>' + JSON.stringify(info, null, 2) + '</pre>';
+                debugInfo.style.display = 'block';
+            }
+
+            preferencesForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Disable submit button to prevent double submission
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Saving...';
+                
+                const formData = new FormData(preferencesForm);
+                
+                // Debug: Show what data we're sending
+                const debugData = {};
+                for (let [key, value] of formData.entries()) {
+                    debugData[key] = value;
+                }
+                showDebugInfo({
+                    action: 'Sending data to server',
+                    data: debugData,
+                    url: 'savepreferences.php'
+                });
+                
+                fetch('savepreferences.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    // Check if the response is ok
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    // Check if response is JSON
+                    const contentType = response.headers.get('content-type');
+                    if (!contentType || !contentType.includes('application/json')) {
+                        // If it's not JSON, get the text to see what the server returned
+                        return response.text().then(text => {
+                            throw new Error(`Expected JSON response but got: ${text.substring(0, 200)}...`);
+                        });
+                    }
+                    
+                    return response.json();
+                })
+                .then(data => {
+                    showDebugInfo({
+                        action: 'Response received',
+                        response: data
+                    });
+                    
+                    if (data.success) {
+                        showAlert(data.message, 'success');
+                        // Redirect to home page after successful save
+                        setTimeout(() => {
+                            window.location.href = '../index.php';
+                        }, 2000);
+                    } else {
+                        showAlert(data.message || 'Unknown error occurred', 'danger');
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch Error:', error);
+                    showDebugInfo({
+                        action: 'Error occurred',
+                        error: error.message,
+                        stack: error.stack
+                    });
+                    
+                    if (error.message.includes('Failed to fetch')) {
+                        showAlert('Network error: Unable to connect to server. Please check if the PHP file exists and your server is running.', 'danger');
+                    } else if (error.message.includes('HTTP error')) {
+                        showAlert(`Server error: ${error.message}. Please check server logs.`, 'danger');
+                    } else if (error.message.includes('Expected JSON')) {
+                        showAlert('Server returned invalid response. Please check the PHP file for syntax errors or debug output.', 'danger');
+                    } else {
+                        showAlert(`Error: ${error.message}`, 'danger');
+                    }
+                })
+                .finally(() => {
+                    // Re-enable submit button
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Save Preferences';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
